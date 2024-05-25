@@ -28,7 +28,8 @@ def build_url(destinations: Union[list, list[list]], origins: Union[list, list[l
     base_url = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
     units = 'units=metric'
     # Google Maps API Key
-    key = 'key=AIzaSyDPoF1tM0w_2wGHVWaFnDZNfhX8SXtuoDM'
+    with open('API_KEY.txt', 'r') as f:
+        key = f'key={f.read()}'  # Read the API key from a text file
 
     # Handle single point input by converting it to a list of one point
     if isinstance(destinations[0], (int, float)):
