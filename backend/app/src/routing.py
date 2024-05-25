@@ -1,19 +1,35 @@
-import networkx as nx
+import numpy as np
 import matplotlib.pyplot as plt
+import networkx as nx
 from vrpy import VehicleRoutingProblem
 
+def cost(distance): 
+    car_cost = distance * 0.5
+    bike_cost = distance * 0.7
+    return [car_cost, bike_cost]
 
-if __name__ == "__main__":
+# Create graph
+G = nx.DiGraph()
+for v in [1, 2, 3, 4, 5]:
+    G.add_edge("Source", v, cost=cost(10))
+    G.add_edge(v, "Sink", cost=cost(10))
+G.add_edge(1, 2, cost=cost(10))
+G.add_edge(2, 3, cost=cost(10))
+G.add_edge(3, 4, cost=cost(15))
+G.add_edge(4, 5, cost=cost(10))
 
-    G = nx.DiGraph()
-    G.add_edge("Source", 1, cost=[1, 2])
-    G.add_edge("Source", 2, cost=[2, 4])
-    G.add_edge(1, "Sink", cost=[0, 0])
-    G.add_edge(2, "Sink", cost=[2, 4])
-    G.add_edge(1, 2, cost=[1, 2])
+for v in G.nodes():
+    if v not in ["Source", "Sink"]:
+        G.nodes[v]["demand"] = 1
 
-    # nx.draw(G, with_labels=True)
-    # plt.show()
+prob = VehicleRoutingProblem(G, mixed_fleet=True, load_capacity=[3, 2], num_vehicles=[1, 4])#, drop_penalty=10000)
+prob.solve()
 
-    prob = VehicleRoutingProblem(G, mixed_fleet=True, load_capacity=[10, 15])
-    prob.solve()
+print(f"{prob.best_value=}")
+print(f"{prob.best_routes=}")
+print(f"{prob.best_routes_load=}")
+print(f"{prob.best_routes_type=}")
+
+
+nx.draw(G, with_labels=True)
+plt.show()
