@@ -1,5 +1,5 @@
 import networkx
 from src.vehicle import Vehicle
 
-def generateGraph(addresses: list[str], vehicles: Vehicle) -> networkx.Graph:
+def generateGraph(addresses: list[str], vehicles: list[Vehicle]) -> networkx.Graph:
     pass
