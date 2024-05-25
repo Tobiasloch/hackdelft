@@ -19,3 +19,4 @@ typing_extensions==4.12.0
 uvicorn==0.29.0
 vrpy==0.5.1
 zipp==3.18.2
+requests==2.26.0
