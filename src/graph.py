@@ -10,6 +10,8 @@ from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from google_interface import get_edge_weight
 
+import matplotlib.pyplot as plt
+
 # Function to get coordinates
 def get_coordinates(address):
     geolocator = Nominatim(user_agent="hackathon")
@@ -51,6 +53,23 @@ def build_knn_graph(coordinates, k=3):
         G.nodes[i]['pos'] = (lat, lon)
 
     return G
+
+def plot_knn_graph(G):
+    """
+    Plot the k-NN graph using networkx and matplotlib.
+
+    Parameters:
+    - G (networkx.Graph): The k-NN graph to plot.
+    """
+    pos = nx.get_node_attributes(G, 'pos')
+    labels = nx.get_node_attributes(G, 'address')
+
+    plt.figure(figsize=(10, 8))
+    nx.draw(G, pos, with_labels=True, node_size=300, node_color='red', font_size=8, font_color='black', labels=labels)
+    plt.title(f'k-Nearest Neighbors Graph')
+    plt.xlabel('Longitude')
+    plt.ylabel('Latitude')
+    plt.show()
 
 def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3) -> networkx.Graph:
     # Get coordinates for each address
@@ -108,4 +127,6 @@ def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3) -> network
         DG.edges[u, v]['cost'] = durations[i]
         DG.edges[u, v]['distances'] = distances[i]
         i=i+1
+    
+    plot_knn_graph(DG)
     return DG
