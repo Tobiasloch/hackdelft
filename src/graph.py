@@ -5,9 +5,11 @@ from sklearn.neighbors import kneighbors_graph
 import numpy as np
 import networkx as nx
 import geolocator
+from vrpy import VehicleRoutingProblem
 
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+from google_interface import get_edge_weight
 
 # Function to get coordinates
 def get_coordinates(address):
@@ -19,6 +21,7 @@ def get_coordinates(address):
             return None
     except GeocoderTimedOut:
         return get_coordinates(address)
+
 
 def build_knn_graph(coordinates, k=3):
     """
@@ -49,4 +52,59 @@ def build_knn_graph(coordinates, k=3):
     return G
 
 def generateGraph(addresses: list[str], vehicles: list[Vehicle]) -> networkx.Graph:
-    pass
+    # Get coordinates for each address
+    coordinates = {address: get_coordinates(address) for address in addresses}
+    G = build_knn_graph(coordinates, k)
+    # Initialize the directed graph
+    DG = nx.DiGraph()
+
+    # Add nodes and their attributes from the undirected graph to the directed graph
+    for node, data in G.nodes(data=True):
+        if data['address'] != 'Mekelweg 4, 2628 CD Delft':
+            DG.add_node(node, **data)
+
+
+    # Add both directions for each edge in the undirected graph
+    for u, v in G.edges:
+        if G.nodes[u]['address'] != 'Mekelweg 4, 2628 CD Delft' and G.nodes[v]['address'] != 'Mekelweg 4, 2628 CD Delft':
+            DG.add_edge(u, v)
+            DG.add_edge(v, u)
+    copy_node_data = G.nodes[0]
+    new_outgoing_node = 'Source'
+    new_incoming_node = 'Sink'
+    DG.add_node(new_outgoing_node, **copy_node_data)
+    DG.add_node(new_incoming_node, **copy_node_data)
+
+    # Connect the new outgoing node to all existing nodes with outgoing edges
+    for node in DG.nodes:
+        if node != new_outgoing_node and node != new_incoming_node:
+            DG.add_edge(new_outgoing_node, node)
+
+    # Connect the new incoming node to all existing nodes with incoming edges
+    for node in DG.nodes:
+        if node != new_outgoing_node and node != new_incoming_node:
+            DG.add_edge(node, new_incoming_node)
+    
+    # Initialize lists for origins and destinations
+    origins = []
+    destinations = []
+
+    # Iterate through all edges
+    for edge in DG.edges:
+        origin, destination = edge
+        origins.append(DG.nodes[origin]['pos'])
+        destinations.append(DG.nodes[destination]['pos'])
+    google_distances = get_edge_weight(origins, destinations)
+    durations = [[trip['driving']['duration'], trip['bicycling']['duration']] for trip in google_distances]
+    distances = [[trip['driving']['distance'], trip['bicycling']['distance']] for trip in google_distances]
+    
+    for node in DG.nodes:
+        if node != 'Sink' and node != 'Source':
+            DG.nodes[node]['demand'] = 1
+
+    i = 0
+    for u, v in DG.edges():
+        DG.edges[u, v]['cost'] = durations[i]
+        DG.edges[u, v]['distances'] = distances[i]
+        i=i+1
+    return DG
