@@ -1,14 +1,19 @@
 
-run
+Create and activate virtual env
+```
+python -m venv venv
+source venv/bin/activate
 
 ```
-poetry install
+run
+```
+pip install -r requirements.txt
 ```
 
 to install all the dependencies and then run:
 
 ```
-poetry run uvicorn src.main:app --reload
+uvicorn app.src.main:app --reload
 ```
 
 to start the server.
