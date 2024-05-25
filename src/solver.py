@@ -3,7 +3,9 @@ from src.vehicle import Vehicle
 from vrpy import VehicleRoutingProblem
 
 
-def solve(graph:Graph, vehicles:list[Vehicle]) -> dict[str, list[tuple[int]]]:
-    prob = VehicleRoutingProblem(Graph, mixed_fleet=True, load_capacity=[10, 5], num_vehicles=[1, 4])#, drop_penalty=0.1)
-    prob.solve(exact=True,greedy=False,time_limit=30,pricing_strategy='Hyper')
-    pass
+def solve(graph:Graph, vehicles:list[Vehicle], greedy=False, exact=True, pricing_strategy="Hyper", time_limit=30) -> VehicleRoutingProblem:
+    load_capacity = [vehicle.capacity for vehicle in vehicles]
+    num_vehicles = [vehicle.count for vehicle in vehicles]
+    
+    prob = VehicleRoutingProblem(graph, mixed_fleet=True, load_capacity=load_capacity, num_vehicles=num_vehicles)
+    return prob.solve(exact=exact,greedy=greedy,time_limit=time_limit,pricing_strategy=pricing_strategy)
