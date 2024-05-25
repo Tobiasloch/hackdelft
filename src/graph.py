@@ -51,7 +51,7 @@ def build_knn_graph(coordinates, k=3):
 
     return G
 
-def generateGraph(addresses: list[str], vehicles: list[Vehicle]) -> networkx.Graph:
+def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3) -> networkx.Graph:
     # Get coordinates for each address
     coordinates = {address: get_coordinates(address) for address in addresses}
     G = build_knn_graph(coordinates, k)
