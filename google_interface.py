@@ -124,8 +124,8 @@ def get_edge_weight(origins: list[tuple], destinations: list[tuple]) -> dict:
 
 def __main__():
     # Test the function with multiple points
-    origins = [(40.7128, -74.0060), (34.0522, -118.2437)]
-    destinations = [(37.7749, -122.4194), (41.8781, -87.6298)]
+    origins = [(52.0115073, 4.358595), (52.0115073, 4.358595)]
+    destinations = [(52.0266492, 4.3624455), (51.9973499, 4.3512313)]
 
     print(get_edge_weight(origins, destinations))
 
