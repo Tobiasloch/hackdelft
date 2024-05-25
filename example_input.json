@@ -7,17 +7,16 @@
         {
             "name":"Leos Bike",
             "speed": 20.2,
-            "capacity": 20
+            "capacity": 5,
+            "type":"Bike",
+            "count":1
         },
         {
             "name":"Ninos Car",
             "speed": 50,
-            "capacity": 1000
-        },
-        {
-            "name": "Benis Bike",
-            "speed": 25,
-            "capacity": 15
+            "capacity": 5,
+            "type":"Bike",
+            "count":4
         }
     ]
 

@@ -4,7 +4,6 @@ from src.vehicle import Vehicle
 from sklearn.neighbors import kneighbors_graph
 import numpy as np
 import networkx as nx
-import geolocator
 from vrpy import VehicleRoutingProblem
 
 from geopy.geocoders import Nominatim
@@ -13,6 +12,8 @@ from google_interface import get_edge_weight
 
 # Function to get coordinates
 def get_coordinates(address):
+    geolocator = Nominatim(user_agent="hackathon")
+
     try:
         location = geolocator.geocode(address)
         if location:

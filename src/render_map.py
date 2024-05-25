@@ -11,6 +11,7 @@ def render_map(route:list[tuple[int]], outfile:str):
     map_center = find_center(route)  # Centered on one of the coordinates
     mymap = folium.Map(location=map_center, zoom_start=13)
 
+    # Add markers for each address
     for address, coord in route:
         folium.Marker(
             location=coord,
@@ -18,16 +19,18 @@ def render_map(route:list[tuple[int]], outfile:str):
         ).add_to(mymap)
 
     # Add edges between consecutive addresses
-    for i, coord_1 in enumerate(route[:-1]):
-        coord_2 = route[i + 1]
+    #addresses_list = list(coordinates.keys())
+    addresses_list = route
+    for i, (address, coord) in enumerate(route[:-1]):
+        coord_1 = coord
+        coord_2 = route[i + 1][1]
         # Calculate midpoint between two coordinates for label placement
         midpoint = [(coord_1[0] + coord_2[0]) / 2, (coord_1[1] + coord_2[1]) / 2]
         folium.PolyLine(
             locations=[coord_1, coord_2],
             color="blue",
-            popup=f'<a href="https//:google.de" target="_blank">  {i+1}',
+            popup=f'Edge {i+1}<br><a href="https://www.google.com/maps/dir/?api=1&origin={coord_1[0]},{coord_1[1]}&destination={coord_2[0]},{coord_2[1]}&travelmode=driving" target="_blank">Route to next node</a>',
             tooltip=f"Edge {i+1}",
-            
         ).add_to(mymap)
         folium.Marker(
             location=midpoint,
@@ -35,4 +38,4 @@ def render_map(route:list[tuple[int]], outfile:str):
         ).add_to(mymap)
 
     # Save the map to an HTML file
-    mymap.save("map_with_numbered_edges.html")
+    mymap.save("optimesed route.html")
