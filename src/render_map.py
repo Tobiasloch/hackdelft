@@ -1,4 +1,10 @@
 import folium
+from src.vehicle import Vehicle
+
+TYPE_TO_MAPS_TYPE = {
+    "bike": "bicycling",
+    "car": "driving"
+}
 
 def find_center(route:list[tuple[int]]) -> tuple[int]:
     # Calculate the center of the route
@@ -7,7 +13,7 @@ def find_center(route:list[tuple[int]]) -> tuple[int]:
     center = (sum(latitudes) / len(route), sum(longitudes) / len(route))
     return center
 
-def render_map(route:list[tuple[int]], outfile:str):
+def render_map(vehicle: Vehicle, route:list[tuple[int]], outfile:str):
     map_center = find_center(route)  # Centered on one of the coordinates
     mymap = folium.Map(location=map_center, zoom_start=13)
 
@@ -25,6 +31,9 @@ def render_map(route:list[tuple[int]], outfile:str):
                 popup=address,
             ).add_to(mymap)
 
+    maps_type = "driving"
+    if vehicle.type in TYPE_TO_MAPS_TYPE:
+        maps_type = TYPE_TO_MAPS_TYPE[vehicle.type]
     # Add edges between consecutive addresses
     for i, (address, coord) in enumerate(route[:-1]):
         coord_1 = coord
@@ -51,7 +60,7 @@ def render_map(route:list[tuple[int]], outfile:str):
                 icon_size=(24, 24),
                 #icon_anchor=(12, 12),
             ),
-            popup=folium.Popup(f'Edge {i+1}<br><a href="https://www.google.com/maps/dir/?api=1&origin={coord_1[0]},{coord_1[1]}&destination={coord_2[0]},{coord_2[1]}&travelmode=driving" target="_blank">Route to next node</a>', max_width=300),
+            popup=folium.Popup(f'Edge {i+1}<br><a href="https://www.google.com/maps/dir/?api=1&origin={coord_1[0]},{coord_1[1]}&destination={coord_2[0]},{coord_2[1]}&travelmode={maps_type}" target="_blank">Route to next node</a>', max_width=300),
         ).add_to(mymap)
 
     # Save the map to an HTML file

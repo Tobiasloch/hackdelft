@@ -1,20 +1,18 @@
 {
     "addressFile": "addresses.csv",
 
-    "hub": "",
+    "hubIndex": 2,
 
     "vehicles":[
         {
-            "name":"Benis",
-            "speed": 20.2,
+            "name":"Leos",
             "capacity": 10,
             "type":"Bike",
             "count":5
         },
         {
             "name":"Ninos",
-            "speed": 50,
-            "capacity": 30,
+            "capacity": 25,
             "type":"Car",
             "count":1
         }
