@@ -2,11 +2,12 @@ import argparse, json
 from src.vehicle import Vehicle
 from src.graph import generateGraph
 from src.solver import solve
-import pickle
+import pickle, os
 from src.render_map import render_map
 
 ADDRESSFILE_KEY = "addressFile"
 VEHICLE_KEY = "vehicles"
+HUBINDEX_KEY = "hubIndex"
 
 def main():
     parser = argparse.ArgumentParser(description="This program calculates the optimal routes for vehicles to deliver goods.")
@@ -14,6 +15,7 @@ def main():
     parser.add_argument("input_file", help="The input file containing the data for the problem. (JSON format)")
     
     optional_args_parser = parser.add_argument_group("Optional arguments")
+    optional_args_parser.add_argument("--output_folder", type=str, default="out", help="The folder to save the route html files. (Default: out)")
     # parameter int k is optional
     
     solver_args_parser = optional_args_parser.add_argument_group("Solver options")
@@ -34,6 +36,7 @@ def main():
 
     input_file_path = args.input_file
     config = json.load(open(input_file_path, "r"))
+    hubIndex = int(config[HUBINDEX_KEY]) if HUBINDEX_KEY in config else 0
 
     addresses = None
     if ADDRESSFILE_KEY in config:
@@ -52,7 +55,7 @@ def main():
         print("No vehicles specified in input file.")
         return 1
     if args.use_pickled_graph == False:
-        graph = generateGraph(addresses, vehicles, k=args.k)
+        graph = generateGraph(addresses, vehicles, k=args.k, hubIndex=hubIndex)
         if args.pickledump_new_graph == True:
             with open(args.pickle_file_name, 'wb') as f:
                 pickle.dump(graph, f)
@@ -62,11 +65,12 @@ def main():
 
     result = solve(graph, vehicles, greedy=args.greedy, exact=args.exact, pricing_strategy=args.pricing_strategy, time_limit=args.time_limit, dive=args.dive)
     
+    os.makedirs(args.output_folder, exist_ok=True)
     for route_id, route in result.best_routes.items():
         route = [(graph.nodes[node]['address'], graph.nodes[node]['pos']) for node in result.best_routes[route_id]]
         vehicle = vehicles[result.best_routes_type[route_id]]
-        name = f"{vehicle.name}_{vehicle.type}_{route_id}.html"
-        render_map(vehicle, route, name)
+        path = f"{args.output_folder}/{vehicle.name}_{vehicle.type}_{route_id}.html"
+        render_map(vehicle, route, path)
     
 if __name__ == "__main__":
     main()
