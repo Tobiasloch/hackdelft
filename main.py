@@ -10,6 +10,8 @@ VEHICLE_KEY = "vehicles"
 HUBINDEX_KEY = "hubIndex"
 
 def main():
+    use_pickled_graph = True
+    pickledump_new_graph = False
     parser = argparse.ArgumentParser(description="This program calculates the optimal routes for vehicles to deliver goods.")
 
     parser.add_argument("input_file", help="The input file containing the data for the problem. (JSON format)")

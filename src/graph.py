@@ -9,13 +9,13 @@ from vrpy import VehicleRoutingProblem
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from google_interface import get_edge_weight
-
+import time, pickle
 import matplotlib.pyplot as plt
 
 # Function to get coordinates
 def get_coordinates(address):
-    geolocator = Nominatim(user_agent="hackathon")
-
+    geolocator = Nominatim(user_agent="hackathon3")
+    time.sleep(0.1)
     try:
         location = geolocator.geocode(address)
         if location:
@@ -23,6 +23,7 @@ def get_coordinates(address):
         else:
             return None
     except GeocoderTimedOut:
+        time.sleep(0.3)
         return get_coordinates(address)
 
 
@@ -74,6 +75,11 @@ def plot_knn_graph(G):
 def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3, hubIndex=0) -> networkx.Graph:
     # Get coordinates for each address
     coordinates = {address: get_coordinates(address) for address in addresses}
+    #with open('coordinates.pkl', 'wb') as f:
+    #    pickle.dump(coordinates, f)
+    # with open('coordinates.pkl', 'rb') as f:
+    #     coordinates = pickle.load(f)
+    #print(coordinates)
     G = build_knn_graph(coordinates, k)
     # Initialize the directed graph
     DG = nx.DiGraph()

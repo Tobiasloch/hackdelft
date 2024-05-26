@@ -5,16 +5,16 @@
 
     "vehicles":[
         {
-            "name":"Leo",
-            "capacity": 5,
-            "type":"bike",
-            "count":1
+            "name":"Leos",
+            "capacity": 10,
+            "type":"Bike",
+            "count":5
         },
         {
-            "name":"Nino",
-            "capacity": 5,
-            "type":"bike",
-            "count":4
+            "name":"Ninos",
+            "capacity": 25,
+            "type":"Car",
+            "count":1
         }
     ]
 

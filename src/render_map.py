@@ -19,10 +19,17 @@ def render_map(vehicle: Vehicle, route:list[tuple[int]], outfile:str):
 
     # Add markers for each address
     for address, coord in route:
-        folium.Marker(
-            location=coord,
-            popup=address,
-        ).add_to(mymap)
+        if address == 'Mekelweg 4, 2628 CD Delft':
+            folium.Marker(
+                location=coord,
+                popup=address,
+                icon=folium.Icon(color='orange', icon='fa-solid fa-house', prefix='fa')
+            ).add_to(mymap)
+        else:
+            folium.Marker(
+                location=coord,
+                popup=address,
+            ).add_to(mymap)
 
     maps_type = "driving"
     if vehicle.type in TYPE_TO_MAPS_TYPE:
