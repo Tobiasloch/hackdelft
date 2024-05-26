@@ -9,21 +9,26 @@ ADDRESSFILE_KEY = "addressFile"
 VEHICLE_KEY = "vehicles"
 
 def main():
-    use_pickled_graph = False
-    pickledump_new_graph = True
     parser = argparse.ArgumentParser(description="This program calculates the optimal routes for vehicles to deliver goods.")
 
     parser.add_argument("input_file", help="The input file containing the data for the problem. (JSON format)")
     
     optional_args_parser = parser.add_argument_group("Optional arguments")
     # parameter int k is optional
-    optional_args_parser.add_argument("-k", "--k", type=int, default=4, help="The number of nearest neighbors to consider when building the k-NN graph. (Default: 4)")
-    # solver args too
-    optional_args_parser.add_argument("--greedy", action="store_true", default=True, help="Use the greedy algorithm to solve the problem.")
-    optional_args_parser.add_argument("--exact", action="store_true", default=False, help="Use the exact algorithm to solve the problem.")
-    optional_args_parser.add_argument("--dive", action="store_true", default=True, help="dive.")
-    optional_args_parser.add_argument("--pricing_strategy", type=str, default="Hyper", help="The pricing strategy to use when solving the problem. (Default: Hyper)")
-    optional_args_parser.add_argument("--time_limit", type=int, default=10, help="The time limit (in seconds) for the solver. (Default: 30)")
+    
+    solver_args_parser = optional_args_parser.add_argument_group("Solver options")
+    solver_args_parser.add_argument("-k", "--k", type=int, default=4, help="The number of nearest neighbors to consider when building the k-NN graph. (Default: 4)")
+    solver_args_parser.add_argument("--greedy", action="store_true", default=True, help="Use the greedy algorithm to solve the problem.")
+    solver_args_parser.add_argument("--exact", action="store_true", default=False, help="Use the exact algorithm to solve the problem.")
+    solver_args_parser.add_argument("--dive", action="store_true", default=True, help="dive.")
+    solver_args_parser.add_argument("--pricing_strategy", type=str, default="Hyper", help="The pricing strategy to use when solving the problem. (Default: Hyper)")
+    solver_args_parser.add_argument("--time_limit", type=int, default=10, help="The time limit (in seconds) for the solver. (Default: 30)")
+
+
+    solver_args_parser.add_argument("--use_pickled_graph", action="store_true", default=False, help="Use the pickled graph.")
+    solver_args_parser.add_argument("--pickledump_new_graph", action="store_true", default=False, help="Dump the new graph.")
+    solver_args_parser.add_argument("--pickle_file_name", type=str, default="graph.pkl", help="The name of the pickle file to use.")
+
 
     args = parser.parse_args()
 
@@ -46,13 +51,13 @@ def main():
     else:
         print("No vehicles specified in input file.")
         return 1
-    if use_pickled_graph == False:
+    if args.use_pickled_graph == False:
         graph = generateGraph(addresses, vehicles, k=args.k)
-        if pickledump_new_graph == True:
-            with open('graph100.pkl', 'wb') as f:
+        if args.pickledump_new_graph == True:
+            with open(args.pickle_file_name, 'wb') as f:
                 pickle.dump(graph, f)
     else:
-        with open('graph100.pkl', 'rb') as f:
+        with open(args.pickle_file_name, 'rb') as f:
             graph = pickle.load(f)
 
     result = solve(graph, vehicles, greedy=args.greedy, exact=args.exact, pricing_strategy=args.pricing_strategy, time_limit=args.time_limit, dive=args.dive)
