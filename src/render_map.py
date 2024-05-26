@@ -4,9 +4,6 @@ def find_center(route:list[tuple[int]]) -> tuple[int]:
     # Calculate the center of the route
     latitudes = [coord[1][0] for coord in route]
     longitudes = [coord[1][1] for coord in route]
-    print(latitudes)
-    print(longitudes)
-    print(route)
     center = (sum(latitudes) / len(route), sum(longitudes) / len(route))
     return center
 
