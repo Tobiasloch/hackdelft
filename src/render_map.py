@@ -2,8 +2,11 @@ import folium
 
 def find_center(route:list[tuple[int]]) -> tuple[int]:
     # Calculate the center of the route
-    latitudes = [coord[0] for coord in route]
-    longitudes = [coord[1] for coord in route]
+    latitudes = [coord[1][0] for coord in route]
+    longitudes = [coord[1][1] for coord in route]
+    print(latitudes)
+    print(longitudes)
+    print(route)
     center = (sum(latitudes) / len(route), sum(longitudes) / len(route))
     return center
 
@@ -38,4 +41,4 @@ def render_map(route:list[tuple[int]], outfile:str):
         ).add_to(mymap)
 
     # Save the map to an HTML file
-    mymap.save("optimesed route.html")
+    mymap.save(outfile)

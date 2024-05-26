@@ -8,4 +8,5 @@ def solve(graph:Graph, vehicles:list[Vehicle], greedy=False, exact=True, pricing
     num_vehicles = [vehicle.count for vehicle in vehicles]
     
     prob = VehicleRoutingProblem(graph, mixed_fleet=True, load_capacity=load_capacity, num_vehicles=num_vehicles)
-    return prob.solve(exact=exact,greedy=greedy,time_limit=time_limit,pricing_strategy=pricing_strategy, dive=dive)
+    prob.solve(exact=exact,greedy=greedy,time_limit=time_limit,pricing_strategy=pricing_strategy, dive=dive)
+    return prob

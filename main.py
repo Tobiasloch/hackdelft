@@ -17,9 +17,9 @@ def main():
     # parameter int k is optional
     optional_args_parser.add_argument("-k", "--k", type=int, default=4, help="The number of nearest neighbors to consider when building the k-NN graph. (Default: 4)")
     # solver args too
-    optional_args_parser.add_argument("--greedy", action="store_true", help="Use the greedy algorithm to solve the problem.")
-    optional_args_parser.add_argument("--exact", action="store_false", help="Use the exact algorithm to solve the problem.")
-    optional_args_parser.add_argument("--dive", action="store_true", help="dive.")
+    optional_args_parser.add_argument("--greedy", action="store_true", default=True, help="Use the greedy algorithm to solve the problem.")
+    optional_args_parser.add_argument("--exact", action="store_true", default=False, help="Use the exact algorithm to solve the problem.")
+    optional_args_parser.add_argument("--dive", action="store_true", default=True, help="dive.")
     optional_args_parser.add_argument("--pricing_strategy", type=str, default="Hyper", help="The pricing strategy to use when solving the problem. (Default: Hyper)")
     optional_args_parser.add_argument("--time_limit", type=int, default=10, help="The time limit (in seconds) for the solver. (Default: 30)")
 

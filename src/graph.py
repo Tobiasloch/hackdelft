@@ -128,5 +128,4 @@ def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3) -> network
         DG.edges[u, v]['distances'] = distances[i]
         i=i+1
     
-    plot_knn_graph(DG)
     return DG
