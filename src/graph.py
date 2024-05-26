@@ -71,22 +71,23 @@ def plot_knn_graph(G):
     plt.ylabel('Latitude')
     plt.show()
 
-def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3) -> networkx.Graph:
+def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3, hubIndex=0) -> networkx.Graph:
     # Get coordinates for each address
     coordinates = {address: get_coordinates(address) for address in addresses}
     G = build_knn_graph(coordinates, k)
     # Initialize the directed graph
     DG = nx.DiGraph()
+    hub = addresses[hubIndex]
 
     # Add nodes and their attributes from the undirected graph to the directed graph
     for node, data in G.nodes(data=True):
-        if data['address'] != 'Mekelweg 4, 2628 CD Delft':
+        if data['address'] != hub:
             DG.add_node(node, **data)
 
 
     # Add both directions for each edge in the undirected graph
     for u, v in G.edges:
-        if G.nodes[u]['address'] != 'Mekelweg 4, 2628 CD Delft' and G.nodes[v]['address'] != 'Mekelweg 4, 2628 CD Delft':
+        if G.nodes[u]['address'] != hub and G.nodes[v]['address'] != hub:
             DG.add_edge(u, v)
             DG.add_edge(v, u)
     copy_node_data = G.nodes[0]

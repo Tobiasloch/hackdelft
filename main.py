@@ -70,6 +70,8 @@ def main():
         route = [(graph.nodes[node]['address'], graph.nodes[node]['pos']) for node in result.best_routes[route_id]]
         vehicle = vehicles[result.best_routes_type[route_id]]
         path = f"{args.output_folder}/{vehicle.name}_{vehicle.type}_{route_id}.html"
+
+        # generate an html file for the route using openstreetmap
         render_map(vehicle, route, path)
     
 if __name__ == "__main__":
