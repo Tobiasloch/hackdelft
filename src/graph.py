@@ -72,13 +72,12 @@ def plot_knn_graph(G):
     plt.ylabel('Latitude')
     plt.show()
 
-def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3, hubIndex=0) -> networkx.Graph:
+def generateGraph(addresses: list[str], vehicles: list[Vehicle], k=3, hubIndex=0, coordinates=None) -> networkx.Graph:
     # Get coordinates for each address
-    coordinates = {address: get_coordinates(address) for address in addresses}
+    if coordinates is None:
+        coordinates = {address: get_coordinates(address) for address in addresses}
     #with open('coordinates.pkl', 'wb') as f:
     #    pickle.dump(coordinates, f)
-    # with open('coordinates.pkl', 'rb') as f:
-    #     coordinates = pickle.load(f)
     #print(coordinates)
     G = build_knn_graph(coordinates, k)
     # Initialize the directed graph

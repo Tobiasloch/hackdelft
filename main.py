@@ -10,14 +10,13 @@ VEHICLE_KEY = "vehicles"
 HUBINDEX_KEY = "hubIndex"
 
 def main():
-    use_pickled_graph = True
-    pickledump_new_graph = False
     parser = argparse.ArgumentParser(description="This program calculates the optimal routes for vehicles to deliver goods.")
 
     parser.add_argument("input_file", help="The input file containing the data for the problem. (JSON format)")
     
     optional_args_parser = parser.add_argument_group("Optional arguments")
     optional_args_parser.add_argument("--output_folder", type=str, default="out", help="The folder to save the route html files. (Default: out)")
+    optional_args_parser.add_argument("--coordinates_file", type=str, default=None, help="The file containing the coordinates for the addresses. (Default: None)")
     # parameter int k is optional
     
     solver_args_parser = optional_args_parser.add_argument_group("Solver options")
@@ -33,6 +32,10 @@ def main():
     solver_args_parser.add_argument("--pickledump_new_graph", action="store_true", default=False, help="Dump the new graph.")
     solver_args_parser.add_argument("--pickle_file_name", type=str, default="graph.pkl", help="The name of the pickle file to use.")
 
+    coordinates = None
+    if args.coordinates_file is not None:
+        with open(args.coordinates_file, 'r') as f:
+            coordinates = pickle.load(f)
 
     args = parser.parse_args()
 
@@ -57,7 +60,7 @@ def main():
         print("No vehicles specified in input file.")
         return 1
     if args.use_pickled_graph == False:
-        graph = generateGraph(addresses, vehicles, k=args.k, hubIndex=hubIndex)
+        graph = generateGraph(addresses, vehicles, k=args.k, hubIndex=hubIndex, coordinates=coordinates)
         if args.pickledump_new_graph == True:
             with open(args.pickle_file_name, 'wb') as f:
                 pickle.dump(graph, f)
