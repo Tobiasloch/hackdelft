@@ -2,13 +2,15 @@ import argparse, json
 from src.vehicle import Vehicle
 from src.graph import generateGraph
 from src.solver import solve
+import pickle
 from src.render_map import render_map
 
 ADDRESSFILE_KEY = "addressFile"
 VEHICLE_KEY = "vehicles"
 
 def main():
-
+    use_pickled_graph = False
+    pickledump_new_graph = True
     parser = argparse.ArgumentParser(description="This program calculates the optimal routes for vehicles to deliver goods.")
 
     parser.add_argument("input_file", help="The input file containing the data for the problem. (JSON format)")
@@ -44,8 +46,14 @@ def main():
     else:
         print("No vehicles specified in input file.")
         return 1
-    
-    graph = generateGraph(addresses, vehicles, k=args.k)
+    if use_pickled_graph == False:
+        graph = generateGraph(addresses, vehicles, k=args.k)
+        if pickledump_new_graph == True:
+            with open('graph100.pkl', 'wb') as f:
+                pickle.dump(graph, f)
+    else:
+        with open('graph100.pkl', 'rb') as f:
+            graph = pickle.load(f)
 
     result = solve(graph, vehicles, greedy=args.greedy, exact=args.exact, pricing_strategy=args.pricing_strategy, time_limit=args.time_limit, dive=args.dive)
     
@@ -55,6 +63,5 @@ def main():
         name = f"{vehicle.name}_{vehicle.type}_{route_id}.html"
         render_map(route,name)
     
-
 if __name__ == "__main__":
     main()
