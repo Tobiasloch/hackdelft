@@ -5,18 +5,18 @@
 
     "vehicles":[
         {
-            "name":"Leos Bike",
+            "name":"Benis",
             "speed": 20.2,
-            "capacity": 5,
+            "capacity": 10,
             "type":"Bike",
-            "count":1
+            "count":5
         },
         {
-            "name":"Ninos Car",
+            "name":"Ninos",
             "speed": 50,
-            "capacity": 5,
-            "type":"Bike",
-            "count":4
+            "capacity": 30,
+            "type":"Car",
+            "count":1
         }
     ]
 

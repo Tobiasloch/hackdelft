@@ -13,10 +13,17 @@ def render_map(route:list[tuple[int]], outfile:str):
 
     # Add markers for each address
     for address, coord in route:
-        folium.Marker(
-            location=coord,
-            popup=address,
-        ).add_to(mymap)
+        if address == 'Mekelweg 4, 2628 CD Delft':
+            folium.Marker(
+                location=coord,
+                popup=address,
+                icon=folium.Icon(color='orange', icon='fa-solid fa-house', prefix='fa')
+            ).add_to(mymap)
+        else:
+            folium.Marker(
+                location=coord,
+                popup=address,
+            ).add_to(mymap)
 
     # Add edges between consecutive addresses
     for i, (address, coord) in enumerate(route[:-1]):

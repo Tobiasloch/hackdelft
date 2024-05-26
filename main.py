@@ -9,8 +9,8 @@ ADDRESSFILE_KEY = "addressFile"
 VEHICLE_KEY = "vehicles"
 
 def main():
-    use_pickled_graph = False
-    pickledump_new_graph = True
+    use_pickled_graph = True
+    pickledump_new_graph = False
     parser = argparse.ArgumentParser(description="This program calculates the optimal routes for vehicles to deliver goods.")
 
     parser.add_argument("input_file", help="The input file containing the data for the problem. (JSON format)")
@@ -52,7 +52,7 @@ def main():
             with open('graph100.pkl', 'wb') as f:
                 pickle.dump(graph, f)
     else:
-        with open('graph100.pkl', 'rb') as f:
+        with open('graph.pkl', 'rb') as f:
             graph = pickle.load(f)
 
     result = solve(graph, vehicles, greedy=args.greedy, exact=args.exact, pricing_strategy=args.pricing_strategy, time_limit=args.time_limit, dive=args.dive)
