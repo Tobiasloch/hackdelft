@@ -53,7 +53,7 @@ def main():
         route = [(graph.nodes[node]['address'], graph.nodes[node]['pos']) for node in result.best_routes[route_id]]
         vehicle = vehicles[result.best_routes_type[route_id]]
         name = f"{vehicle.name}_{vehicle.type}_{route_id}.html"
-        render_map(route,name)
+        render_map(vehicle, route, name)
     
 
 if __name__ == "__main__":
